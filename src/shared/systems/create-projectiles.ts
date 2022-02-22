@@ -24,7 +24,7 @@ export const CreateProjectiles: GameSystem = {
 
 			const behavior = FastCast.newBehavior();
 			behavior.RaycastParams = new RaycastParams();
-			behavior.RaycastParams.FilterDescendantsInstances = Object.assign([], [owner.value.Character]);
+			behavior.RaycastParams.FilterDescendantsInstances = [owner.value.Character];
 			behavior.Acceleration = projectileMeta.acceleration;
 
 			const activeCast = caster.Fire(
