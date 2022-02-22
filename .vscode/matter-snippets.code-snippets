@@ -1,0 +1,16 @@
+{
+    "Matter System": {
+        "prefix": [
+            "system",
+            "mattersystem"
+        ],
+        "description": "Create a matter system",
+        "body": [
+            "import { GameSystem } from \"types/matter-types\";",
+            "",
+            "export const ${1:$TM_FILENAME_BASE}: GameSystem = {",
+            "\tsystem: (world) => {},",
+            "};",
+        ]
+    },
+}
