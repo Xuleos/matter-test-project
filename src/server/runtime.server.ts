@@ -24,7 +24,9 @@ const loadSystems = (folder: Folder) => {
 				t.values(
 					t.interface({
 						system: t.callback,
-						event: t.optional(t.literal("RenderStepped")),
+						event: t.optional(
+							t.union(t.literal("RenderStepped"), t.literal("Heartbeat"), t.literal("Stepped")),
+						),
 						priority: t.optional(t.number),
 						after: t.optional(t.array(t.table)),
 					}),
