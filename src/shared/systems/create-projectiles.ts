@@ -2,11 +2,11 @@ import { Dependency } from "@flamework/core";
 import FastCast from "@rbxts/fastcast";
 import { Janitor } from "@rbxts/janitor";
 import Make from "@rbxts/make";
-import Object from "@rbxts/object-utils";
 import { Workspace } from "@rbxts/services";
 import { Owner } from "shared/components/owner";
 import { Projectile } from "shared/components/projectile";
 import { ProjectileFire } from "shared/components/projectile-fire";
+import { ProjectileHit } from "shared/components/projectile-hit";
 import { Renderable } from "shared/components/renderable";
 import { TieJanitor } from "shared/components/tie-janitor";
 import { Transform } from "shared/components/transform";
@@ -24,7 +24,7 @@ export const CreateProjectiles: GameSystem = {
 
 			const behavior = FastCast.newBehavior();
 			behavior.RaycastParams = new RaycastParams();
-			behavior.RaycastParams.FilterDescendantsInstances = [owner.value.Character];
+			behavior.RaycastParams.FilterDescendantsInstances = [owner.value.Character!];
 			behavior.Acceleration = projectileMeta.acceleration;
 
 			const activeCast = caster.Fire(
@@ -80,9 +80,23 @@ export const CreateProjectiles: GameSystem = {
 			janitor.Add(
 				Dependency<ProjectileSignalHandler>()
 					.getRayHit(ProjectileType.NORMAL)
-					.Connect((caster, result) => {
-						
-					})
+					.Connect((cast, result) => {
+						if (activeCast === cast) {
+							world.spawn(
+								Transform({
+									cframe: CFrame.lookAt(result.Position, result.Position.add(result.Normal)),
+								}),
+								ProjectileHit({
+									normal: result.Normal,
+									hitObject: result.Instance,
+									material: result.Material,
+								}),
+								Owner({
+									value: owner.value,
+								}),
+							);
+						}
+					}),
 			);
 
 			world.insert(

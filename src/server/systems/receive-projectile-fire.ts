@@ -1,27 +1,22 @@
 import Log from "@rbxts/log";
-import { Option } from "@rbxts/rust-classes";
 import { Events } from "server/events";
-import { Character } from "shared/components/character";
 import { Owner } from "shared/components/owner";
 import { ProjectileFire } from "shared/components/projectile-fire";
 import { Transform } from "shared/components/transform";
+import CharacterUtil from "shared/modules/character-util";
 import { useSignal } from "shared/modules/useSignal";
 import { GameSystem } from "types/matter-types";
 
-export const GunFire: GameSystem = {
+export const ReceiveProjectileFire: GameSystem = {
 	system: (world) => {
 		for (const [player, projectileFireData, transformData] of useSignal(Events.fireGun, "connect")) {
-			let characterPositionOption = Option.none<Vector3>();
+			CharacterUtil.getCharacterEntityForPlayer(world, player).match(
+				({ id }) => {
+					const transform = world.get(id, Transform);
+					if (transform === undefined) return;
 
-			for (const [_, owner, transform] of world.query(Owner, Transform, Character)) {
-				if (owner.value === player) {
-					characterPositionOption = Option.some(transform.cframe.Position);
-					break;
-				}
-			}
+					const characterPosition = transform.cframe.Position;
 
-			characterPositionOption.match(
-				(characterPosition) => {
 					if (characterPosition.sub(transformData.cframe.Position).Magnitude > 6) {
 						Log.Warn("Projectile position was too far from character");
 						return;
