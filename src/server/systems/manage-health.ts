@@ -6,7 +6,9 @@ import { DealDamage } from "./deal-damage";
 export const ManageHealth: GameSystem = {
 	system: (world) => {
 		for (const [_, healthRecord, character] of world.queryChanged(Health, Character)) {
-			character.humanoid.Health = healthRecord.new.value;
+			if (healthRecord.new !== undefined) {
+				character.humanoid.Health = healthRecord.new.value;
+			}
 		}
 	},
 	after: [DealDamage],
