@@ -43,11 +43,12 @@ export const CreateProjectiles: GameSystem = {
 				}),
 			);
 
-			// create model and insert renderable
 			if (projectileFire.render === true) {
 				const part = Make("Part", {
 					Anchored: true,
 					CanCollide: false,
+					Size: projectileMeta.size,
+					Material: Enum.Material.Neon,
 				});
 
 				const model = Make("Model", {

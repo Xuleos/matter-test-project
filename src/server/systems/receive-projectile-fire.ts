@@ -16,7 +16,6 @@ export const ReceiveProjectileFire: GameSystem = {
 					if (transform === undefined) return;
 
 					const characterPosition = transform.cframe.Position;
-
 					if (characterPosition.sub(transformData.cframe.Position).Magnitude > 6) {
 						Log.Warn("Projectile position was too far from character");
 						return;

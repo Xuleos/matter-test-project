@@ -7,11 +7,13 @@ export const ProjectileMeta: {
 		caster: Caster;
 		velocity: number;
 		acceleration: Vector3;
+		size: Vector3;
 	};
 } = {
 	[ProjectileType.NORMAL]: {
 		caster: new FastCast(),
-		velocity: 100,
-		acceleration: new Vector3(0, -Workspace.Gravity, 0),
+		velocity: 800,
+		acceleration: new Vector3(0, -Workspace.Gravity / 6, 0),
+		size: new Vector3(1, 1, 15),
 	},
 };

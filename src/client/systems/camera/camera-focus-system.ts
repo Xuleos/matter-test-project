@@ -22,7 +22,7 @@ export const CameraFocusSystem: GameSystem = {
 			const cameraCFrame = new CFrame(focusTransform.cframe.Position)
 				.mul(CFrame.Angles(0, cameraMouseInput.x, 0))
 				.mul(CFrame.Angles(cameraMouseInput.y, 0, 0))
-				.mul(new CFrame(2, 1.5, 6));
+				.mul(new CFrame(3, 1.8, 10));
 
 			world.insert(
 				id,
