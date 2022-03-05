@@ -1,5 +1,5 @@
 import { AnyEntity } from "@rbxts/matter";
-import { Workspace } from "@rbxts/services";
+import { UserInputService, Workspace } from "@rbxts/services";
 import { CameraInfluence } from "client/components/camera-influence";
 import { Transform } from "shared/components/transform";
 import { GameSystem } from "types/matter-types";
@@ -13,6 +13,7 @@ export const UpdateCamera: GameSystem = {
 			| {
 					id: AnyEntity;
 					priority: Priority;
+					cameraInfluence: CameraInfluence;
 					transform: Transform;
 			  }
 			| undefined;
@@ -22,12 +23,15 @@ export const UpdateCamera: GameSystem = {
 				highestPriority = {
 					id: id,
 					priority: cameraInfluence.priority,
+					cameraInfluence: cameraInfluence,
 					transform: transform,
 				};
 			}
 		}
 
 		if (highestPriority && Workspace.CurrentCamera) {
+			UserInputService.MouseBehavior =
+				highestPriority.cameraInfluence.mouseBehavior ?? Enum.MouseBehavior.Default;
 			Workspace.CurrentCamera.CFrame = highestPriority.transform.cframe;
 		}
 	},

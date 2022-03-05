@@ -28,6 +28,7 @@ export const SpawnCamera: GameSystem = {
 				world.spawn(
 					CameraInfluence({
 						priority: Priority.MEDIUM,
+						mouseBehavior: Enum.MouseBehavior.LockCenter,
 					}),
 					CameraMouseInput({
 						x: 0,

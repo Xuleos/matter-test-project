@@ -1,5 +1,4 @@
 import { AnyEntity } from "@rbxts/matter";
-import { UserInputService } from "@rbxts/services";
 import { CameraInfluence } from "client/components/camera-influence";
 import { CameraMouseInput } from "client/components/camera-mouse-input";
 import { FocusCamera } from "client/components/focus-camera";
@@ -18,8 +17,6 @@ export const CameraFocusSystem: GameSystem = {
 			CameraInfluence,
 			Transform,
 		)) {
-			UserInputService.MouseBehavior = Enum.MouseBehavior.LockCenter;
-
 			if (!world.contains(focusCamera.on)) {
 				toDespawn.push(id);
 				continue;
