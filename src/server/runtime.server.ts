@@ -25,7 +25,12 @@ const loadSystems = (folder: Folder) => {
 					t.interface({
 						system: t.callback,
 						event: t.optional(
-							t.union(t.literal("RenderStepped"), t.literal("Heartbeat"), t.literal("Stepped")),
+							t.union(
+								t.literal("RenderStepped"),
+								t.literal("Heartbeat"),
+								t.literal("Stepped"),
+								t.literal("default"),
+							),
 						),
 						priority: t.optional(t.number),
 						after: t.optional(t.array(t.table)),
@@ -53,7 +58,9 @@ const loop = new Loop(world, {});
 loop.scheduleSystems(systems);
 loop.begin({
 	default: RunService.Heartbeat,
+	Heartbeat: RunService.Heartbeat,
 	RenderStepped: RunService.RenderStepped,
+	Stepped: RunService.Stepped,
 });
 
 for (const system of systems) {

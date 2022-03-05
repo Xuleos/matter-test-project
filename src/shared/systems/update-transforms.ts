@@ -1,14 +1,35 @@
+import { AnyEntity, useThrottle } from "@rbxts/matter";
+import { RunService } from "@rbxts/services";
 import { Renderable } from "shared/components/renderable";
 import { Transform } from "shared/components/transform";
 import { GameSystem } from "types/matter-types";
 
 export const UpdateTransforms: GameSystem = {
-	priority: -100,
+	priority: 100,
+	event: RunService.IsClient() ? "RenderStepped" : "default",
 	system: (world) => {
-		for (const [_, transformRecord, { model }] of world.queryChanged(Transform, Renderable)) {
+		const list: Array<{
+			id: AnyEntity;
+			modelName: string;
+			reconcile: boolean;
+			position: Vector3;
+		}> = [];
+
+		for (const [id, transformRecord, { model }] of world.queryChanged(Transform, Renderable)) {
+			list.push({
+				id: id,
+				modelName: model.Name,
+				reconcile: transformRecord.new ? !transformRecord.new.dontReconcile : false,
+				position: transformRecord.new ? transformRecord.new.cframe.Position : new Vector3(),
+			});
+
 			if (transformRecord.new && !transformRecord.new.dontReconcile) {
 				model.SetPrimaryPartCFrame(transformRecord.new.cframe);
 			}
+		}
+
+		if (useThrottle(5)) {
+			print(list);
 		}
 
 		for (const [_, modelRecord, transform] of world.queryChanged(Renderable, Transform)) {
