@@ -1,3 +1,4 @@
+import { AnyEntity } from "@rbxts/matter";
 import { UserInputService } from "@rbxts/services";
 import { CameraInfluence } from "client/components/camera-influence";
 import { CameraMouseInput } from "client/components/camera-mouse-input";
@@ -9,6 +10,8 @@ export const CameraFocusSystem: GameSystem = {
 	priority: 200,
 	event: "RenderStepped",
 	system: (world) => {
+		const toDespawn: Array<AnyEntity> = [];
+
 		for (const [id, cameraMouseInput, focusCamera] of world.query(
 			CameraMouseInput,
 			FocusCamera,
@@ -16,6 +19,11 @@ export const CameraFocusSystem: GameSystem = {
 			Transform,
 		)) {
 			UserInputService.MouseBehavior = Enum.MouseBehavior.LockCenter;
+
+			if (!world.contains(focusCamera.on)) {
+				toDespawn.push(id);
+				continue;
+			}
 
 			const focusTransform = world.get(focusCamera.on, Transform);
 
@@ -30,6 +38,10 @@ export const CameraFocusSystem: GameSystem = {
 					cframe: cameraCFrame,
 				}),
 			);
+		}
+
+		for (const id of toDespawn) {
+			world.despawn(id);
 		}
 	},
 };
